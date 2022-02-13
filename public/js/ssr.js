@@ -1667,8 +1667,6 @@ _inertiajs_server__WEBPACK_IMPORTED_MODULE_3___default()(function (page) {
         location: new URL(props.initialPage.props.ziggy.url)
       });
 
-      console.log(props.initialPage.props.ziggy.url);
-
       global.route = function (name, params, absolute) {
         var config = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Ziggy;
         return ziggy_js__WEBPACK_IMPORTED_MODULE_4___default()(name, params, absolute, config);

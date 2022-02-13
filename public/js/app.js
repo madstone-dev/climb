@@ -7743,7 +7743,6 @@ var appName = ((_window$document$getE = window.document.getElementsByTagName("ti
     var el = _ref.el,
         App = _ref.App,
         props = _ref.props;
-    console.log("app");
     return (0,react_dom__WEBPACK_IMPORTED_MODULE_1__.render)( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(App, _objectSpread({}, props)), el);
   }
 });
