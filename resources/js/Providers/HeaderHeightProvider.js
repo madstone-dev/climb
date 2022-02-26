@@ -1,21 +1,21 @@
-import { createContext, useState } from "react";
+import { createContext, useState } from 'react';
 
 export const HeaderHeightContext = createContext({
-    headerHeight: 0,
-    setHeaderHeight: () => {},
+  headerHeight: 0,
+  setHeaderHeight: () => {},
 });
 
 export const HeaderHeightProvider = ({ children }) => {
-    const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
-    return (
-        <HeaderHeightContext.Provider
-            value={{
-                headerHeight,
-                setHeaderHeight,
-            }}
-        >
-            {children}
-        </HeaderHeightContext.Provider>
-    );
+  return (
+    <HeaderHeightContext.Provider
+      value={{
+        headerHeight,
+        setHeaderHeight,
+      }}
+    >
+      {children}
+    </HeaderHeightContext.Provider>
+  );
 };
