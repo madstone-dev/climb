@@ -3,9 +3,14 @@ import { getAvatar } from '@/Utils/auth.utils';
 import Dropdown from './Dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/pro-regular-svg-icons';
-import { headerUserNavs, routes } from '@/constances';
+import { routes } from '@/constances';
 
 export default function HeaderUserNav({ auth }) {
+  const headerUserNavs = [
+    { name: '내 정보', href: `/profile`, method: 'get' },
+    { name: '로그아웃', href: route(routes.LOGOUT), method: 'post' },
+  ];
+
   return auth.user ? (
     <div className="flex items-center">
       {/* Profile dropdown */}

@@ -1,10 +1,9 @@
-import { headerNavs } from '@/constances';
 import { Link } from '@inertiajs/inertia-react';
 
-export default function HeaderNav({ router }) {
+export default function HeaderNav({ router, navs }) {
   return (
     <>
-      {headerNavs.map((item) => (
+      {navs.map((item) => (
         <Link
           key={item.name}
           href={item.href}

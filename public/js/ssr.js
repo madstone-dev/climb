@@ -283,6 +283,21 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function Header(_ref) {
   var auth = _ref.auth,
       router = _ref.router;
+  var headerNavs = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    return [{
+      name: '홈',
+      href: route(_constances__WEBPACK_IMPORTED_MODULE_6__.routes.HOME)
+    }, {
+      name: '자유게시판',
+      href: route(_constances__WEBPACK_IMPORTED_MODULE_6__.routes.BOARD)
+    }, {
+      name: '지역모임',
+      href: route(_constances__WEBPACK_IMPORTED_MODULE_6__.routes.LOCAL_GATHERING)
+    }, {
+      name: '중고거래',
+      href: '#'
+    }];
+  }, []);
 
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -333,7 +348,8 @@ function Header(_ref) {
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("div", {
               className: "hidden md:ml-16 md:flex md:items-center md:space-x-4",
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_HeaderNavs__WEBPACK_IMPORTED_MODULE_3__["default"], {
-                router: router
+                router: router,
+                navs: headerNavs
               })
             })]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("div", {
@@ -356,6 +372,7 @@ function Header(_ref) {
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_SlideOver__WEBPACK_IMPORTED_MODULE_9__["default"], {
       auth: auth,
       router: router,
+      navs: headerNavs,
       sidebarOpen: sidebarOpen,
       setSidebarOpen: setSidebarOpen
     })]
@@ -375,20 +392,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ HeaderNav)
 /* harmony export */ });
-/* harmony import */ var _constances__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/constances */ "./resources/js/constances.js");
-/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia-react */ "@inertiajs/inertia-react");
-/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
-
+/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @inertiajs/inertia-react */ "@inertiajs/inertia-react");
+/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
 
 function HeaderNav(_ref) {
-  var router = _ref.router;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
-    children: _constances__WEBPACK_IMPORTED_MODULE_0__.headerNavs.map(function (item) {
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Link, {
+  var router = _ref.router,
+      navs = _ref.navs;
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
+    children: navs.map(function (item) {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_0__.Link, {
         href: item.href,
         "aria-current": item.href === router.url ? 'page' : undefined,
         className: "".concat(item.href === router.url ? 'dark:bg-neutral-600 dark:text-white bg-gray-100 text-gray-900' : 'text-gray-900 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-700', "\n                    px-5 py-2 rounded-md text-sm font-medium"),
@@ -432,6 +448,15 @@ __webpack_require__.r(__webpack_exports__);
 
 function HeaderUserNav(_ref) {
   var auth = _ref.auth;
+  var headerUserNavs = [{
+    name: '내 정보',
+    href: "/profile",
+    method: 'get'
+  }, {
+    name: '로그아웃',
+    href: route(_constances__WEBPACK_IMPORTED_MODULE_5__.routes.LOGOUT),
+    method: 'post'
+  }];
   return auth.user ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
     className: "flex items-center",
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
@@ -450,7 +475,7 @@ function HeaderUserNav(_ref) {
             })]
           })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_Dropdown__WEBPACK_IMPORTED_MODULE_2__["default"].Content, {
-          children: _constances__WEBPACK_IMPORTED_MODULE_5__.headerUserNavs.map(function (item) {
+          children: headerUserNavs.map(function (item) {
             return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_Dropdown__WEBPACK_IMPORTED_MODULE_2__["default"].Link, {
               method: item.method,
               href: item.href,
@@ -636,6 +661,7 @@ __webpack_require__.r(__webpack_exports__);
 function SlideOver(_ref) {
   var auth = _ref.auth,
       router = _ref.router,
+      navs = _ref.navs,
       sidebarOpen = _ref.sidebarOpen,
       setSidebarOpen = _ref.setSidebarOpen;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Transition.Root, {
@@ -708,7 +734,7 @@ function SlideOver(_ref) {
               className: "mt-5",
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("div", {
                 className: "px-2 space-y-1",
-                children: _constances__WEBPACK_IMPORTED_MODULE_4__.headerNavs.map(function (item) {
+                children: navs.map(function (item) {
                   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_6__.Link, {
                     href: item.href,
                     "aria-current": item.href === router.url ? 'page' : undefined,
@@ -1851,6 +1877,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 function Home(props) {
+  console.log(props);
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_Layouts_Layout__WEBPACK_IMPORTED_MODULE_2__["default"], _objectSpread(_objectSpread({}, props), {}, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Head, {
       title: "\uD648"
@@ -2002,9 +2029,7 @@ var classNames = function classNames() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "routes": () => (/* binding */ routes),
-/* harmony export */   "headerNavs": () => (/* binding */ headerNavs),
-/* harmony export */   "headerUserNavs": () => (/* binding */ headerUserNavs)
+/* harmony export */   "routes": () => (/* binding */ routes)
 /* harmony export */ });
 var routes = {
   REGISTER: 'register',
@@ -2020,28 +2045,6 @@ var routes = {
   LOCAL_GATHERING: 'local-gathering',
   TRADE: 'trade'
 };
-var headerNavs = [{
-  name: '홈',
-  href: route(routes.HOME)
-}, {
-  name: '자유게시판',
-  href: route(routes.BOARD)
-}, {
-  name: '지역모임',
-  href: route(routes.LOCAL_GATHERING)
-}, {
-  name: '중고거래',
-  href: '#'
-}];
-var headerUserNavs = [{
-  name: '내 정보',
-  href: "/profile",
-  method: 'get'
-}, {
-  name: '로그아웃',
-  href: route(routes.LOGOUT),
-  method: 'post'
-}];
 
 /***/ }),
 

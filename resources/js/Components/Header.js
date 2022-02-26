@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from '@inertiajs/inertia-react';
 import HeaderUserNav from './HeaderUserNav';
 import HeaderNav from './HeaderNavs';
@@ -10,6 +10,15 @@ import { faBars } from '@fortawesome/pro-solid-svg-icons';
 import SlideOver from './SlideOver';
 
 export default function Header({ auth, router }) {
+  const headerNavs = useMemo(
+    () => [
+      { name: '홈', href: route(routes.HOME) },
+      { name: '자유게시판', href: route(routes.BOARD) },
+      { name: '지역모임', href: route(routes.LOCAL_GATHERING) },
+      { name: '중고거래', href: '#' },
+    ],
+    [],
+  );
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const headerRef = useRef();
   const { setHeaderHeight } = useContext(HeaderHeightContext);
@@ -47,7 +56,7 @@ export default function Header({ auth, router }) {
                 </span>
               </Link>
               <div className="hidden md:ml-16 md:flex md:items-center md:space-x-4">
-                <HeaderNav router={router} />
+                <HeaderNav router={router} navs={headerNavs} />
               </div>
             </div>
             <div className="flex items-center md:hidden">
@@ -68,6 +77,7 @@ export default function Header({ auth, router }) {
       <SlideOver
         auth={auth}
         router={router}
+        navs={headerNavs}
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
       />

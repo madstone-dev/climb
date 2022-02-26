@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/pro-solid-svg-icons';
-import { headerNavs, routes } from '@/constances';
+import { routes } from '@/constances';
 import { classNames } from '@/Utils/commons';
 import { Link } from '@inertiajs/inertia-react';
 import Logo from './Logo';
@@ -12,6 +12,7 @@ import { getAvatar } from '@/Utils/auth.utils';
 export default function SlideOver({
   auth,
   router,
+  navs,
   sidebarOpen,
   setSidebarOpen,
 }) {
@@ -79,7 +80,7 @@ export default function SlideOver({
               </Link>
               <nav aria-label="Sidebar" className="mt-5">
                 <div className="px-2 space-y-1">
-                  {headerNavs.map((item) => (
+                  {navs.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
