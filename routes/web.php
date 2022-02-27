@@ -17,9 +17,9 @@ Route::get('/local-gathering', function () {
     return Inertia::render('LocalGathering');
 })->name('local-gathering');
 
-Route::get('/board', function () {
-    return Inertia::render('Board');
-})->name('board');
+Route::get('/trade', function () {
+    return Inertia::render('Trade');
+})->name('trade');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

@@ -1,25 +1,13 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
 import { Link } from '@inertiajs/inertia-react';
 import HeaderUserNav from './HeaderUserNav';
-import HeaderNav from './HeaderNavs';
 import { HeaderHeightContext } from '@/Providers/HeaderHeightProvider';
 import Logo from './Logo';
 import { routes } from '@/constances';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/pro-solid-svg-icons';
-import SlideOver from './SlideOver';
+import { faSearch } from '@fortawesome/pro-regular-svg-icons';
 
-export default function Header({ auth, router }) {
-  const headerNavs = useMemo(
-    () => [
-      { name: '홈', href: route(routes.HOME) },
-      { name: '자유게시판', href: route(routes.BOARD) },
-      { name: '지역모임', href: route(routes.LOCAL_GATHERING) },
-      { name: '중고거래', href: '#' },
-    ],
-    [],
-  );
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+export default function Header({ auth }) {
   const headerRef = useRef();
   const { setHeaderHeight } = useContext(HeaderHeightContext);
   useEffect(() => {
@@ -29,58 +17,53 @@ export default function Header({ auth, router }) {
   return (
     <div
       ref={headerRef}
-      className="sticky top-0 z-40 border-b border-gray-200 dark:border-neutral-700"
+      className="sticky top-0 z-40 bg-white bg-opacity-75 border-b border-gray-200 dark:bg-neutral-900 dark:border-neutral-700"
     >
-      <nav className="mx-auto bg-white dark:bg-neutral-800 max-w-7xl">
-        <div className="px-4 mx-auto sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center w-6 h-6 text-gray-500 rounded-md hover:text-gray-900 sm:hidden"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <span className="sr-only">Open sidebar</span>
-                <FontAwesomeIcon
-                  icon={faBars}
-                  className="text-lg text-gray-400 dark:Ltext-gray-300"
-                />
-              </button>
-              <Link
-                href={route(routes.HOME)}
-                className="items-center flex-shrink-0 hidden space-x-2 md:flex"
-              >
-                <Logo className="w-6 h-6" />
-                <span className="text-xl font-bold whitespace-nowrap">
-                  MadStone
-                </span>
-              </Link>
-              <div className="hidden md:ml-16 md:flex md:items-center md:space-x-4">
-                <HeaderNav router={router} navs={headerNavs} />
-              </div>
-            </div>
-            <div className="flex items-center md:hidden">
+      <nav className="mx-auto max-w-7xl">
+        <div className="px-4 mx-auto">
+          <div className="grid h-16 grid-cols-10">
+            <div className="flex items-center col-span-2 sm:px-4">
               <Link
                 href={route(routes.HOME)}
                 className="flex items-center flex-shrink-0 space-x-2"
               >
                 <Logo className="w-6 h-6" />
-                <span className="text-xl font-bold whitespace-nowrap">
+                <span className="hidden text-xl font-bold whitespace-nowrap lg:inline-block">
                   MadStone
                 </span>
               </Link>
             </div>
-            <HeaderUserNav auth={auth} />
+            <div className="grid grid-cols-10 col-span-8 lg:grid-cols-11">
+              <div className="flex items-center justify-end col-span-8 pr-0 lg:pr-6 lg:col-span-7">
+                <div className="w-full max-w-lg">
+                  <label htmlFor="search" className="sr-only">
+                    검색
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <FontAwesomeIcon
+                        icon={faSearch}
+                        className="w-5 h-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <input
+                      id="search"
+                      name="search"
+                      className="block w-full py-2 pl-10 pr-3 text-sm placeholder-gray-500 bg-white border border-gray-300 rounded-md dark:border-neutral-700 dark:bg-neutral-800 focus:outline-none focus:text-gray-900 dark:focus:text-gray-300 focus:placeholder-gray-400 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                      placeholder="피드 검색"
+                      type="search"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-end col-span-2 lg:col-span-4">
+                <HeaderUserNav auth={auth} />
+              </div>
+            </div>
           </div>
         </div>
       </nav>
-      <SlideOver
-        auth={auth}
-        router={router}
-        navs={headerNavs}
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-      />
     </div>
   );
 }
