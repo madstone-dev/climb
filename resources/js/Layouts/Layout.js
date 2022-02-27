@@ -34,15 +34,15 @@ export default function Layout({ auth, ziggy: router, children }) {
     <div className="w-full min-h-full text-gray-700 bg-white bg-opacity-75 dark:bg-neutral-900 dark:text-white">
       <HeaderHeightProvider>
         <Header auth={auth} router={router} />
-        <div className="w-full px-0 mx-auto divide-x dark:divide-neutral-700 lg:px-4 max-w-7xl lg:grid lg:grid-cols-10">
-          <aside className="py-6 pr-6 lg:col-span-2">
+        <div className="w-full px-0 mx-auto lg:divide-x dark:divide-neutral-700 sm:px-4 max-w-7xl sm:flex">
+          <aside className="hidden w-64 py-6 pr-6 lg:block shrink-0">
             <LeftAside navigation={navigation} router={router} />
           </aside>
-          <div className="divide-x dark:divide-neutral-700 lg:grid lg:grid-cols-11 lg:col-span-8">
-            <main className="bg-opacity-75 lg:col-span-7 dark:bg-neutral-900">
+          <div className="flex-1 divide-x dark:divide-neutral-700 xl:grid xl:grid-cols-11">
+            <main className="bg-opacity-75 xl:col-span-7 dark:bg-neutral-900">
               {children}
             </main>
-            <aside className="py-6 pl-6 lg:col-span-4">
+            <aside className="hidden py-6 pl-6 xl:block xl:col-span-4">
               <RightAside />
             </aside>
           </div>

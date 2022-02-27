@@ -672,6 +672,12 @@ select {
 .col-span-4 {
   grid-column: span 4 / span 4;
 }
+.col-span-1 {
+  grid-column: span 1 / span 1;
+}
+.col-span-9 {
+  grid-column: span 9 / span 9;
+}
 .-m-2 {
   margin: -0.5rem;
 }
@@ -858,6 +864,9 @@ select {
 .w-screen {
   width: 100vw;
 }
+.w-64 {
+  width: 16rem;
+}
 .min-w-0 {
   min-width: 0px;
 }
@@ -893,6 +902,9 @@ select {
 }
 .shrink {
   flex-shrink: 1;
+}
+.shrink-0 {
+  flex-shrink: 0;
 }
 .origin-top {
   transform-origin: top;
@@ -1921,6 +1933,18 @@ select {
 }
 @media (min-width: 640px) {
 
+  .sm\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+
+  .sm\:col-span-8 {
+    grid-column: span 8 / span 8;
+  }
+
+  .sm\:col-span-9 {
+    grid-column: span 9 / span 9;
+  }
+
   .sm\:ml-0 {
     margin-left: 0px;
   }
@@ -1933,6 +1957,10 @@ select {
     display: flex;
   }
 
+  .sm\:grid {
+    display: grid;
+  }
+
   .sm\:hidden {
     display: none;
   }
@@ -1943,6 +1971,10 @@ select {
 
   .sm\:flex-1 {
     flex: 1 1 0%;
+  }
+
+  .sm\:grid-cols-10 {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
   }
 
   .sm\:items-center {
@@ -2028,6 +2060,10 @@ select {
     margin-left: 4rem;
   }
 
+  .md\:block {
+    display: block;
+  }
+
   .md\:inline-block {
     display: inline-block;
   }
@@ -2076,6 +2112,16 @@ select {
 
   .md\:border-l {
     border-left-width: 1px;
+  }
+
+  .md\:px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .md\:px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }
 @media (min-width: 1024px) {
@@ -2133,6 +2179,14 @@ select {
     width: 24rem;
   }
 
+  .lg\:w-3\/4 {
+    width: 75%;
+  }
+
+  .lg\:w-64 {
+    width: 16rem;
+  }
+
   .lg\:max-w-none {
     max-width: none;
   }
@@ -2163,6 +2217,12 @@ select {
          column-gap: 1.5rem;
   }
 
+  .lg\:divide-x > :not([hidden]) ~ :not([hidden]) {
+    --tw-divide-x-reverse: 0;
+    border-right-width: calc(1px * var(--tw-divide-x-reverse));
+    border-left-width: calc(1px * calc(1 - var(--tw-divide-x-reverse)));
+  }
+
   .lg\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
@@ -2188,11 +2248,41 @@ select {
     padding-right: 1rem;
   }
 
+  .lg\:px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .lg\:py-3 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
   .lg\:pr-6 {
     padding-right: 1.5rem;
   }
 }
 @media (min-width: 1280px) {
+
+  .xl\:col-span-7 {
+    grid-column: span 7 / span 7;
+  }
+
+  .xl\:col-span-4 {
+    grid-column: span 4 / span 4;
+  }
+
+  .xl\:block {
+    display: block;
+  }
+
+  .xl\:grid {
+    display: grid;
+  }
+
+  .xl\:grid-cols-11 {
+    grid-template-columns: repeat(11, minmax(0, 1fr));
+  }
 
   .xl\:px-24 {
     padding-left: 6rem;
