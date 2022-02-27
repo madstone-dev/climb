@@ -38,12 +38,12 @@ export default function LeftAside({ navigation, router }) {
       </nav>
 
       <div className="p-2 mt-8">
-        <button
-          type="button"
-          className="inline-flex justify-center w-3/4 p-2 px-6 py-3 text-base font-semibold text-center text-white bg-gray-700 border border-transparent rounded-full shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        <Link
+          href={route('create-post')}
+          className="inline-flex justify-center w-3/4 p-2 px-6 py-3 text-base font-semibold text-center text-white bg-gray-700 border border-transparent rounded-full shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
         >
           글 작성하기
-        </button>
+        </Link>
       </div>
     </div>
   );

@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faThumbsUp,
   faMessageDots,
-  faEye,
   faShareNodes,
   faEllipsis,
 } from '@fortawesome/pro-solid-svg-icons';
@@ -136,7 +135,7 @@ const questions = [
 
 export default function PostList() {
   return (
-    <div className="mt-4">
+    <div>
       <h1 className="sr-only">Recent questions</h1>
       <ul role="list" className="space-y-4 divide-y dark:divide-neutral-700">
         {questions.map((question, index) => (

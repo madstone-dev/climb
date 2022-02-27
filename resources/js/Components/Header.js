@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { Link } from '@inertiajs/inertia-react';
 import HeaderUserNav from './HeaderUserNav';
 import { HeaderHeightContext } from '@/Providers/HeaderHeightProvider';

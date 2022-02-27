@@ -12,7 +12,7 @@ import {
 
 export default function Layout({ auth, ziggy: router, children }) {
   const navigation = [
-    { name: '피드', href: route(routes.HOME), icon: faHome },
+    { name: '피드 홈', href: route(routes.HOME), icon: faHome },
     {
       name: '지역모임',
       href: route(routes.LOCAL_GATHERING),
@@ -31,10 +31,10 @@ export default function Layout({ auth, ziggy: router, children }) {
   ];
 
   return (
-    <div className="w-full min-h-full text-gray-700 bg-white bg-opacity-75 dark:bg-neutral-900 dark:text-white">
+    <div className="flex flex-col w-full min-h-screen text-gray-700 bg-white bg-opacity-75 dark:bg-neutral-900 dark:text-white">
       <HeaderHeightProvider>
         <Header auth={auth} router={router} />
-        <div className="w-full px-0 mx-auto lg:divide-x dark:divide-neutral-700 sm:px-4 max-w-7xl sm:flex">
+        <div className="flex-1 w-full px-0 mx-auto lg:divide-x dark:divide-neutral-700 sm:px-4 max-w-7xl sm:flex">
           <aside className="hidden w-64 py-6 pr-6 lg:block shrink-0">
             <LeftAside navigation={navigation} router={router} />
           </aside>

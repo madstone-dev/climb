@@ -13,6 +13,17 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::middleware(['auth', 'verified'])->group(function() {
+    Route::get('/create-post', function() {
+        return Inertia::render('CreatePost');
+    })->name('create-post');
+
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+});
+
+
 Route::get('/local-gathering', function () {
     return Inertia::render('LocalGathering');
 })->name('local-gathering');
@@ -20,10 +31,6 @@ Route::get('/local-gathering', function () {
 Route::get('/trade', function () {
     return Inertia::render('Trade');
 })->name('trade');
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 
 require __DIR__.'/auth.php';
