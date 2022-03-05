@@ -220,8 +220,8 @@ export default function Home(props) {
 
             {/* 비디오 프리뷰 */}
             {video && (
-              <div className="flex w-full space-x-2 overflow-x-auto bg-transparent flex-nowrap bg-gray-50">
-                <div className="relative inline-block w-full overflow-hidden border border-gray-300 rounded-md max-h-80 shrink-0">
+              <div className="flex w-full space-x-2 overflow-x-auto bg-transparent flex-nowrap">
+                <div className="relative inline-block w-full overflow-hidden border border-gray-300 rounded-md dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800 max-h-80 shrink-0">
                   <button
                     onClick={() => setVideo(null)}
                     type="button"
@@ -242,9 +242,9 @@ export default function Home(props) {
         </div>
         <div
           className={classNames(
-            'sticky bottom-0 flex flex-wrap justify-between px-6 pb-4 bg-white dark:bg-neutral-800',
+            'sticky bottom-0 flex flex-wrap justify-between px-6 pb-4',
             isSticky &&
-              'shadow border-t border-gray-200 dark:border-neutral-700 mt-6',
+              'shadow border-t border-gray-200 dark:border-neutral-700 mt-6 bg-white dark:bg-neutral-900',
           )}
         >
           <div className="flex mt-4 space-x-2">
@@ -281,7 +281,9 @@ export default function Home(props) {
                 className="w-5 h-5"
                 aria-hidden="true"
               />
-              <span className="text-sm font-medium">비디오 추가</span>
+              <span className="text-sm font-medium">
+                비디오 {video ? '변경' : '추가'}
+              </span>
               <input
                 type="file"
                 className="hidden"
