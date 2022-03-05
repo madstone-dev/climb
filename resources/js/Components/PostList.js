@@ -8,6 +8,7 @@ import {
   faEllipsis,
 } from '@fortawesome/pro-solid-svg-icons';
 import { classNames } from '@/Utils/commons';
+import { iconColor, textColor } from '@/styles';
 
 const questions = [
   {
@@ -155,7 +156,12 @@ export default function PostList() {
                 <div>
                   <div className="flex space-x-3">
                     <div className="flex-1 min-w-0">
-                      <p className="text-base font-medium text-gray-900 dark:text-white">
+                      <p
+                        className={classNames(
+                          'text-base font-medium',
+                          textColor.primary,
+                        )}
+                      >
                         <a
                           href={question.author.href}
                           className="hover:underline"
@@ -164,11 +170,9 @@ export default function PostList() {
                         </a>
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-300">
-                        <a href={question.href} className="hover:underline">
-                          <time dateTime={question.datetime}>
-                            {question.date}
-                          </time>
-                        </a>
+                        <time dateTime={question.datetime}>
+                          {question.date}
+                        </time>
                       </p>
                     </div>
                     <div className="flex self-center flex-shrink-0">
@@ -177,7 +181,12 @@ export default function PostList() {
                         className="relative inline-block text-left"
                       >
                         <div>
-                          <Menu.Button className="flex items-center p-2 -m-2 text-gray-400 rounded-full hover:text-gray-600">
+                          <Menu.Button
+                            className={classNames(
+                              'flex items-center p-2 -m-2 rounded-full',
+                              iconColor.solid,
+                            )}
+                          >
                             <span className="sr-only">Open options</span>
                             <FontAwesomeIcon
                               icon={faEllipsis}
@@ -204,12 +213,11 @@ export default function PostList() {
                                     href="#"
                                     className={classNames(
                                       active
-                                        ? 'bg-gray-100 dark:bg-neutral-700 text-gray-900 dark:text-white'
-                                        : 'text-gray-700 dark:text-gray-300',
+                                        ? `bg-gray-100 dark:bg-neutral-700 ${textColor.primary}`
+                                        : textColor.secondary,
                                       'flex px-4 py-2 text-sm',
                                     )}
                                   >
-                                    {/* <StarIcon className="w-5 h-5 mr-3 text-gray-400" aria-hidden="true" /> */}
                                     <span>Add to favorites</span>
                                   </a>
                                 )}
@@ -220,12 +228,11 @@ export default function PostList() {
                                     href="#"
                                     className={classNames(
                                       active
-                                        ? 'bg-gray-100 dark:bg-neutral-700 text-gray-900 dark:text-white'
-                                        : 'text-gray-700 dark:text-gray-300',
+                                        ? `bg-gray-100 dark:bg-neutral-700 ${textColor.primary}`
+                                        : textColor.secondary,
                                       'flex px-4 py-2 text-sm',
                                     )}
                                   >
-                                    {/* <CodeIcon className="w-5 h-5 mr-3 text-gray-400" aria-hidden="true" /> */}
                                     <span>Embed</span>
                                   </a>
                                 )}
@@ -236,12 +243,11 @@ export default function PostList() {
                                     href="#"
                                     className={classNames(
                                       active
-                                        ? 'bg-gray-100 dark:bg-neutral-700 text-gray-900 dark:text-white'
-                                        : 'text-gray-700 dark:text-gray-300',
+                                        ? `bg-gray-100 dark:bg-neutral-700 ${textColor.primary}`
+                                        : textColor.secondary,
                                       'flex px-4 py-2 text-sm',
                                     )}
                                   >
-                                    {/* <FlagIcon className="w-5 h-5 mr-3 text-gray-400" aria-hidden="true" /> */}
                                     <span>Report content</span>
                                   </a>
                                 )}
@@ -254,7 +260,10 @@ export default function PostList() {
                   </div>
                 </div>
                 <div
-                  className="mt-4 space-y-4 text-sm text-gray-900 dark:text-gray-300"
+                  className={classNames(
+                    'mt-4 space-y-4 text-sm',
+                    textColor.primary,
+                  )}
                   dangerouslySetInnerHTML={{ __html: question.body }}
                 />
                 <div className="flex justify-between mt-6 space-x-8">
@@ -262,14 +271,22 @@ export default function PostList() {
                     <span className="inline-flex items-center text-sm">
                       <button
                         type="button"
-                        className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                        className={classNames(
+                          'inline-flex space-x-2',
+                          iconColor.solid,
+                        )}
                       >
                         <FontAwesomeIcon
                           icon={faThumbsUp}
                           className="w-5 h-5"
                           aria-hidden="true"
                         />
-                        <span className="font-medium text-gray-900">
+                        <span
+                          className={classNames(
+                            'font-medium',
+                            textColor.secondary,
+                          )}
+                        >
                           {question.likes}
                         </span>
                         <span className="sr-only">likes</span>
@@ -278,14 +295,22 @@ export default function PostList() {
                     <span className="inline-flex items-center text-sm">
                       <button
                         type="button"
-                        className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                        className={classNames(
+                          'inline-flex space-x-2',
+                          iconColor.solid,
+                        )}
                       >
                         <FontAwesomeIcon
                           icon={faMessageDots}
                           className="w-5 h-5"
                           aria-hidden="true"
                         />
-                        <span className="font-medium text-gray-900">
+                        <span
+                          className={classNames(
+                            'font-medium',
+                            textColor.secondary,
+                          )}
+                        >
                           {question.replies}
                         </span>
                         <span className="sr-only">replies</span>
@@ -296,14 +321,24 @@ export default function PostList() {
                     <span className="inline-flex items-center text-sm">
                       <button
                         type="button"
-                        className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                        className={classNames(
+                          'inline-flex space-x-2',
+                          iconColor.solid,
+                        )}
                       >
                         <FontAwesomeIcon
                           icon={faShareNodes}
                           className="w-5 h-5"
                           aria-hidden="true"
                         />
-                        <span className="font-medium text-gray-900">Share</span>
+                        <span
+                          className={classNames(
+                            'font-medium',
+                            textColor.secondary,
+                          )}
+                        >
+                          Share
+                        </span>
                       </button>
                     </span>
                   </div>

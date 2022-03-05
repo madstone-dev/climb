@@ -1,3 +1,13 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+.toastui-editor-defaultUI-toolbar {
+  flex-wrap: wrap;
+}
+
+.toastui-editor-dropdown-toolbar {
+  flex-wrap: wrap;
+  height: auto !important;
+  right: 0 !important;
+}

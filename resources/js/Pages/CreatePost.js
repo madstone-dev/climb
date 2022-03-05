@@ -1,19 +1,21 @@
 import { Head } from '@inertiajs/inertia-react';
 import Layout from '@/Layouts/Layout';
-import { useState } from 'react';
+import { useState, Fragment, useRef, useContext, useEffect } from 'react';
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
-import { Combobox } from '@headlessui/react';
+import { Listbox, Transition } from '@headlessui/react';
 import { classNames } from '@/Utils/commons';
 import {
   faHome,
   faLocationDot,
   faBoxTaped,
-  faThumbsUp,
-  faMessageDots,
-  faShareNodes,
+  faVideoPlus,
+  faImage,
+  faXmark,
 } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextareaAutosize from 'react-textarea-autosize';
+import { buttonColor } from '@/styles';
+import { HeaderStyleContext } from '@/Providers/HeaderStyleProvider';
 
 const boards = [
   {
@@ -31,148 +33,273 @@ const boards = [
     title: '중고거래',
     icon: faBoxTaped,
   },
-  // More users...
 ];
+
 export default function Home(props) {
   const [board, setBoard] = useState(boards[0]);
-  console.log(board);
+  const [images, setImages] = useState([]);
+  const [video, setVideo] = useState(null);
+  const contentArea = useRef();
+  const pageArea = useRef();
+  const { height: headerHeight } = useContext(HeaderStyleContext);
+  const [isSticky, setIsSticky] = useState(false);
+
+  const shouldSticky = () => {
+    if (pageArea.current) {
+      setIsSticky(
+        window.innerHeight - pageArea.current.clientHeight - headerHeight < 0,
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (window) {
+      window.addEventListener('resize', shouldSticky);
+    }
+    shouldSticky();
+    return () => {
+      if (window) {
+        window.removeEventListener('resize', shouldSticky);
+      }
+    };
+  }, [pageArea.current, images, video]);
+
+  const imageChange = (event) => {
+    const { files } = event.target;
+    const newImages = [];
+    Array.from(files).forEach((file) => {
+      let id = images.length > 0 ? images[images.length - 1].id + 1 : 0;
+      if (newImages.length > 0) {
+        id = newImages[newImages.length - 1].id + 1;
+      }
+      const newImage = {
+        id,
+        file,
+        preview: URL.createObjectURL(file),
+      };
+      newImages.push(newImage);
+    });
+    setImages([...images, ...newImages]);
+    event.target.value = '';
+  };
+
+  const deleteImage = (id) => {
+    const newImages = images.filter((image) => image.id !== id);
+    setImages(newImages);
+  };
+
+  const videoChange = (event) => {
+    const { files } = event.target;
+    if (!files[0]) {
+      return;
+    }
+    const newVideo = {
+      file: files[0],
+      preview: URL.createObjectURL(files[0]),
+    };
+    setVideo(newVideo);
+    event.target.value = '';
+  };
 
   return (
     <Layout {...props}>
       <Head title="글 작성하기" />
-      <div className="p-6">
-        {/* 글 작성 */}
-        <div className="flex space-x-4">
-          <div className="flex-shrink-0">
-            <img
-              className="w-12 h-12 rounded-full"
-              src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt=""
-            />
-          </div>
-          <div className="flex-1">
+      <div ref={pageArea}>
+        <div className="px-6 pt-6">
+          <div className="space-y-4">
             <div className="flex space-x-3">
               {/* 게시위치 선택 */}
-              <Combobox as="div" value={board} onChange={setBoard}>
-                <div className="relative w-64 mt-1">
-                  <Combobox.Input
-                    className="w-full py-2 pl-3 pr-10 bg-white border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-                    displayValue={(board) => board.title}
-                  />
-                  <Combobox.Button className="absolute inset-y-0 right-0 flex items-center px-2 rounded-r-md focus:outline-none">
-                    <SelectorIcon
-                      className="w-5 h-5 text-gray-400"
-                      aria-hidden="true"
-                    />
-                  </Combobox.Button>
-                  <Combobox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                    {boards.map((board, index) => (
-                      <Combobox.Option
-                        key={index}
-                        value={board}
-                        className={({ active }) =>
-                          classNames(
-                            'relative cursor-default select-none py-2 pl-3 pr-9',
-                            active
-                              ? 'bg-indigo-600 text-white'
-                              : 'text-gray-900',
-                          )
-                        }
-                      >
-                        {({ active, selected }) => (
-                          <>
-                            <div className="flex items-center">
-                              <FontAwesomeIcon
-                                icon={board.icon}
-                                className="w-4 h-4"
-                              />
-                              <span
-                                className={classNames(
-                                  'ml-3 truncate',
-                                  selected && 'font-semibold',
-                                )}
-                              >
-                                {board.title}
-                              </span>
-                            </div>
+              <Listbox value={board} onChange={setBoard}>
+                {({ open }) => (
+                  <>
+                    <div className="relative w-64 mt-1">
+                      <Listbox.Button className="w-full py-2 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-md relativew-full dark:border-neutral-700 dark:bg-neutral-800 focus:outline-none focus:text-gray-900 dark:focus:text-white focus:placeholder-gray-400 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                        <div className="flex items-center dark:text-gray-300">
+                          <FontAwesomeIcon
+                            icon={board.icon}
+                            className="w-4 h-4"
+                          />
+                          <span className="ml-3 truncate">{board.title}</span>
+                        </div>
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                          <SelectorIcon
+                            className="w-5 h-5 text-gray-400"
+                            aria-hidden="true"
+                          />
+                        </span>
+                      </Listbox.Button>
 
-                            {selected && (
-                              <span
-                                className={classNames(
-                                  'absolute inset-y-0 right-0 flex items-center pr-4',
-                                  active ? 'text-white' : 'text-indigo-600',
-                                )}
-                              >
-                                <CheckIcon
-                                  className="w-5 h-5"
-                                  aria-hidden="true"
-                                />
-                              </span>
-                            )}
-                          </>
-                        )}
-                      </Combobox.Option>
-                    ))}
-                  </Combobox.Options>
+                      <Transition
+                        show={open}
+                        as={Fragment}
+                        leave="transition ease-in duration-100"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                      >
+                        <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base text-gray-700 bg-white shadow-lg dark:bg-neutral-800 dark:text-white dark:border dark:border-neutral-700 max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                          {boards.map((board) => (
+                            <Listbox.Option
+                              key={board.id}
+                              className={({ selected }) =>
+                                classNames(
+                                  'relative py-2 pl-3 text-gray-700 cursor-default select-none pr-9 dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-neutral-700',
+                                  selected
+                                    ? 'bg-gray-100 dark:bg-neutral-700'
+                                    : '',
+                                )
+                              }
+                              value={board}
+                            >
+                              {({ selected }) => (
+                                <>
+                                  <div className="flex items-center">
+                                    <FontAwesomeIcon
+                                      icon={board.icon}
+                                      className="w-4 h-4"
+                                    />
+                                    <span
+                                      className={classNames(
+                                        'ml-3 truncate',
+                                        selected && 'font-semibold',
+                                      )}
+                                    >
+                                      {board.title}
+                                    </span>
+                                  </div>
+
+                                  {selected && (
+                                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-neutral-700">
+                                      <CheckIcon
+                                        className="w-5 h-5"
+                                        aria-hidden="true"
+                                      />
+                                    </span>
+                                  )}
+                                </>
+                              )}
+                            </Listbox.Option>
+                          ))}
+                        </Listbox.Options>
+                      </Transition>
+                    </div>
+                  </>
+                )}
+              </Listbox>
+            </div>
+            {/* 게시글 */}
+            <TextareaAutosize
+              ref={contentArea}
+              className="block w-full placeholder-gray-500 bg-white border border-gray-300 rounded-md resize-none dark:border-neutral-700 dark:bg-neutral-800 focus:outline-none focus:text-gray-900 dark:focus:text-gray-300 focus:placeholder-gray-400 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+              placeholder={'내용을 입력하세요.'}
+              minRows={5}
+            />
+            {/* 이미지 프리뷰 */}
+            {images.length > 0 && (
+              <div className="flex w-full space-x-2 overflow-x-auto bg-transparent flex-nowrap">
+                {images.map((image, index) => (
+                  <div
+                    key={index}
+                    className="relative inline-block w-32 h-32 overflow-hidden rounded-md shrink-0"
+                  >
+                    <button
+                      onClick={() => deleteImage(image.id)}
+                      type="button"
+                      className="absolute inline-flex items-center p-1 text-white bg-gray-600 border border-transparent rounded-full shadow-sm top-1 left-1 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                    >
+                      <FontAwesomeIcon icon={faXmark} className="w-5 h-5" />
+                    </button>
+                    <img
+                      src={image.preview}
+                      alt={image.file.name}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* 비디오 프리뷰 */}
+            {video && (
+              <div className="flex w-full space-x-2 overflow-x-auto bg-transparent flex-nowrap bg-gray-50">
+                <div className="relative inline-block w-full overflow-hidden border border-gray-300 rounded-md max-h-80 shrink-0">
+                  <button
+                    onClick={() => setVideo(null)}
+                    type="button"
+                    className="absolute z-10 inline-flex items-center p-1 text-white bg-gray-600 border border-transparent rounded-full shadow-sm top-1 left-1 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                  >
+                    <FontAwesomeIcon icon={faXmark} className="w-5 h-5" />
+                  </button>
+                  <video
+                    src={video.preview}
+                    alt={video.file.name}
+                    className="w-full h-full max-w-full"
+                    onLoadedData={() => shouldSticky()}
+                  />
                 </div>
-              </Combobox>
-              {/* 게시 위치 선택 끝 */}
-            </div>
-            <div className="mt-4 space-y-4 text-sm text-gray-900 dark:text-gray-300">
-              <TextareaAutosize
-                className="block w-full max-w-lg border border-gray-300 rounded-md shadow-sm resize-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                defaultValue={
-                  'Jurassic Park was an incredible idea and a magnificent feat of engineering, but poor protocols and a disregard for human safety killed what could have otherwise been one of the best businesses of our generation. Ultimately, I think that if you wanted to run the park successfully and keep visitors safe, the most important thing to prioritize would be'
-                }
+              </div>
+            )}
+          </div>
+        </div>
+        <div
+          className={classNames(
+            'sticky bottom-0 flex flex-wrap justify-between px-6 pb-4 bg-white dark:bg-neutral-800',
+            isSticky &&
+              'shadow border-t border-gray-200 dark:border-neutral-700 mt-6',
+          )}
+        >
+          <div className="flex mt-4 space-x-2">
+            <label
+              className={classNames(
+                'inline-flex items-center p-2 space-x-2 rounded-md whitespace-nowrap cursor-pointer',
+                buttonColor.outline,
+                video && 'pointer-events-none opacity-30',
+              )}
+            >
+              <FontAwesomeIcon
+                icon={faImage}
+                className="w-5 h-5"
+                aria-hidden="true"
               />
-            </div>
-            <div className="flex justify-between mt-6 space-x-8">
-              <div className="flex space-x-6">
-                <span className="inline-flex items-center text-sm">
-                  <button
-                    type="button"
-                    className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
-                  >
-                    <FontAwesomeIcon
-                      icon={faThumbsUp}
-                      className="w-5 h-5"
-                      aria-hidden="true"
-                    />
-                    <span className="font-medium text-gray-900">11</span>
-                    <span className="sr-only">likes</span>
-                  </button>
-                </span>
-                <span className="inline-flex items-center text-sm">
-                  <button
-                    type="button"
-                    className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
-                  >
-                    <FontAwesomeIcon
-                      icon={faMessageDots}
-                      className="w-5 h-5"
-                      aria-hidden="true"
-                    />
-                    <span className="font-medium text-gray-900">11</span>
-                    <span className="sr-only">replies</span>
-                  </button>
-                </span>
-              </div>
-              <div className="flex text-sm">
-                <span className="inline-flex items-center text-sm">
-                  <button
-                    type="button"
-                    className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
-                  >
-                    <FontAwesomeIcon
-                      icon={faShareNodes}
-                      className="w-5 h-5"
-                      aria-hidden="true"
-                    />
-                    <span className="font-medium text-gray-900">Share</span>
-                  </button>
-                </span>
-              </div>
-            </div>
+              <span className="text-sm font-medium">이미지 추가</span>
+              <input
+                type="file"
+                className="hidden"
+                accept="image/jpg,impge/png,image/jpeg,image/gif"
+                multiple
+                onChange={imageChange}
+              />
+            </label>
+            <label
+              className={classNames(
+                'inline-flex items-center p-2 space-x-2 rounded-md whitespace-nowrap cursor-pointer',
+                buttonColor.outline,
+                images.length > 0 && 'pointer-events-none opacity-30',
+              )}
+            >
+              <FontAwesomeIcon
+                icon={faVideoPlus}
+                className="w-5 h-5"
+                aria-hidden="true"
+              />
+              <span className="text-sm font-medium">비디오 추가</span>
+              <input
+                type="file"
+                className="hidden"
+                accept="video/mp4,video/mkv, video/x-m4v,video/*"
+                onChange={videoChange}
+              />
+            </label>
+          </div>
+          <div className="mt-4">
+            <button
+              type="button"
+              className={classNames(
+                'inline-flex items-center px-3 py-2 rounded-md whitespace-nowrap',
+                buttonColor.solid,
+              )}
+            >
+              <span className="text-sm font-medium">등록하기</span>
+            </button>
           </div>
         </div>
       </div>

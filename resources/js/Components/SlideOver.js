@@ -7,7 +7,7 @@ import { classNames } from '@/Utils/commons';
 import { Link } from '@inertiajs/inertia-react';
 import Logo from './Logo';
 import { faUser } from '@fortawesome/pro-regular-svg-icons';
-import { getAvatar } from '@/Utils/auth.utils';
+import UserProfile from './user/UserProfile';
 
 export default function SlideOver({
   auth,
@@ -105,10 +105,9 @@ export default function SlideOver({
                 <div className="flex items-center">
                   <div>
                     {auth.user ? (
-                      <img
+                      <UserProfile
+                        auth={auth}
                         className="inline-block w-10 h-10 rounded-full"
-                        src={getAvatar(auth.user.name)}
-                        alt={`${auth.user.name}'s profile`}
                       />
                     ) : (
                       <Link
