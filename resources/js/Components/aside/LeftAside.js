@@ -42,7 +42,7 @@ export default function LeftAside({ router }) {
 
       <div className="p-2 mt-8">
         <Link
-          href={route('create-post')}
+          href={route('posts.create')}
           className={classNames(
             'inline-flex justify-center w-3/4 p-2 px-6 py-3 text-base font-semibold text-center rounded-full',
             buttonColor.solid,

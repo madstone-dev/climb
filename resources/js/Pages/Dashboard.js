@@ -2,9 +2,9 @@ import React from 'react';
 import { Head } from '@inertiajs/inertia-react';
 import Layout from '@/Layouts/Layout';
 
-export default function Dashboard(props) {
+export default function Dashboard() {
   return (
-    <Layout {...props}>
+    <Layout>
       <Head title="Dashboard" />
 
       <div className="py-12">

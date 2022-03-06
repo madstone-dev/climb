@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\Post\PostController;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
@@ -14,9 +15,9 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function() {
-    Route::get('/create-post', function() {
-        return Inertia::render('CreatePost');
-    })->name('create-post');
+    Route::resources([
+        'posts' => PostController::class,
+    ]);
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');

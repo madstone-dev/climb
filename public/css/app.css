@@ -645,6 +645,12 @@ select {
 .bottom-0 {
   bottom: 0px;
 }
+.bottom-3 {
+  bottom: 0.75rem;
+}
+.right-3 {
+  right: 0.75rem;
+}
 .z-0 {
   z-index: 0;
 }
@@ -1057,6 +1063,9 @@ select {
 .whitespace-nowrap {
   white-space: nowrap;
 }
+.whitespace-pre {
+  white-space: pre;
+}
 .break-all {
   word-break: break-all;
 }
@@ -1153,6 +1162,10 @@ select {
 }
 .bg-opacity-90 {
   --tw-bg-opacity: 0.9;
+}
+.object-contain {
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .object-cover {
   -o-object-fit: cover;
@@ -1307,6 +1320,10 @@ select {
   font-size: 1.875rem;
   line-height: 2.25rem;
 }
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
 .font-medium {
   font-weight: 500;
 }
@@ -1397,6 +1414,14 @@ select {
   --tw-text-opacity: 1;
   color: rgb(22 163 74 / var(--tw-text-opacity));
 }
+.text-blue-500 {
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+.text-blue-600 {
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity));
+}
 .underline {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
@@ -1431,6 +1456,9 @@ select {
 }
 .opacity-30 {
   opacity: 0.3;
+}
+.opacity-50 {
+  opacity: 0.5;
 }
 .shadow-sm {
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -2001,12 +2029,22 @@ select {
     grid-column: span 4 / span 4;
   }
 
+  .md\:block {
+    display: block;
+  }
+
   .md\:inline-block {
     display: inline-block;
   }
 
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .md\:divide-x > :not([hidden]) ~ :not([hidden]) {
+    --tw-divide-x-reverse: 0;
+    border-right-width: calc(1px * var(--tw-divide-x-reverse));
+    border-left-width: calc(1px * calc(1 - var(--tw-divide-x-reverse)));
   }
 
   .md\:border-t-0 {
@@ -2018,6 +2056,14 @@ select {
   }
 }
 @media (min-width: 1024px) {
+
+  .lg\:col-span-7 {
+    grid-column: span 7 / span 7;
+  }
+
+  .lg\:col-span-4 {
+    grid-column: span 4 / span 4;
+  }
 
   .lg\:block {
     display: block;
@@ -2041,6 +2087,10 @@ select {
 
   .lg\:flex-none {
     flex: none;
+  }
+
+  .lg\:grid-cols-11 {
+    grid-template-columns: repeat(11, minmax(0, 1fr));
   }
 
   .lg\:divide-x > :not([hidden]) ~ :not([hidden]) {

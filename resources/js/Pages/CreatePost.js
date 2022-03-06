@@ -1,8 +1,6 @@
-import { Head } from '@inertiajs/inertia-react';
+import { Head, useForm } from '@inertiajs/inertia-react';
 import Layout from '@/Layouts/Layout';
-import { useState, Fragment, useRef, useContext, useEffect } from 'react';
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
-import { Listbox, Transition } from '@headlessui/react';
+import { useState, useRef, useContext, useEffect } from 'react';
 import { classNames } from '@/Utils/commons';
 import {
   faHome,
@@ -10,12 +8,16 @@ import {
   faBoxTaped,
   faVideoPlus,
   faImage,
-  faXmark,
 } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextareaAutosize from 'react-textarea-autosize';
 import { buttonColor, selection } from '@/styles';
 import { HeaderStyleContext } from '@/Providers/HeaderStyleProvider';
+import ValidationError from '@/Components/ValidationError';
+import VideoThumbnail from '@/Components/CreatePost/VideoThumbnail';
+import ImagePreview from '@/Components/CreatePost/ImagePreview';
+import GifPreview from '@/Components/CreatePost/GifPreview';
+import SelectBoard from '@/Components/CreatePost/SelectBoard';
 
 const boards = [
   {
@@ -35,12 +37,15 @@ const boards = [
   },
 ];
 
-export default function Home(props) {
-  const [board, setBoard] = useState(boards[0]);
-  const [images, setImages] = useState([]);
-  const [video, setVideo] = useState(null);
+export default function Home() {
+  const { data, setData, post, progress, errors, clearErrors } = useForm({
+    board: boards[0],
+    images: [],
+    video: null,
+    content: '',
+  });
+  const [existGif, setExistGif] = useState(false);
   const contentAreaCover = useRef();
-  const [content, setContent] = useState('');
   const pageArea = useRef();
   const { height: headerHeight } = useContext(HeaderStyleContext);
   const [isSticky, setIsSticky] = useState(false);
@@ -53,7 +58,25 @@ export default function Home(props) {
     }
   };
 
+  const checkExistGif = () => {
+    const { images } = data;
+    let hasGif = false;
+    images.forEach((image) => {
+      const { file } = image;
+      const extension = file.name.split('.').pop()?.toLowerCase();
+      if (extension === 'gif') {
+        hasGif = true;
+      }
+    });
+    setExistGif(hasGif);
+  };
+
   useEffect(() => {
+    checkExistGif();
+  }, [data.images]);
+
+  useEffect(() => {
+    clearErrors();
     if (window) {
       window.addEventListener('resize', shouldSticky);
     }
@@ -63,17 +86,31 @@ export default function Home(props) {
         window.removeEventListener('resize', shouldSticky);
       }
     };
-  }, [pageArea.current, images, video]);
-
-  useEffect(() => {
-    if (contentAreaCover.current) {
-      contentAreaCover.current.innerText = content;
-    }
-  }, [content, contentAreaCover.current]);
+  }, [pageArea.current, data.images, data.video]);
 
   const imageChange = (event) => {
     const { files } = event.target;
+    const { images } = data;
+
+    if (images.length + files.length > 10 || existGif) {
+      alert('최대 10개의 이미지 또는 1개의 gif만 사용가능합니다.');
+      event.target.value = '';
+      return;
+    }
+
     const newImages = [];
+    let hasGif = existGif;
+    Array.from(files).forEach((file) => {
+      const extension = file.name.split('.').pop()?.toLowerCase();
+      if (extension === 'gif') {
+        hasGif = true;
+      }
+    });
+    if (hasGif && images.length + files.length > 1) {
+      alert('최대 10개의 이미지 또는 1개의 gif만 사용가능합니다.');
+      event.target.value = '';
+      return;
+    }
     Array.from(files).forEach((file) => {
       let id = images.length > 0 ? images[images.length - 1].id + 1 : 0;
       if (newImages.length > 0) {
@@ -86,13 +123,14 @@ export default function Home(props) {
       };
       newImages.push(newImage);
     });
-    setImages([...images, ...newImages]);
+    setData('images', [...images, ...newImages]);
     event.target.value = '';
   };
 
   const deleteImage = (id) => {
+    const { images } = data;
     const newImages = images.filter((image) => image.id !== id);
-    setImages(newImages);
+    setData('images', newImages);
   };
 
   const videoChange = (event) => {
@@ -104,161 +142,100 @@ export default function Home(props) {
       file: files[0],
       preview: URL.createObjectURL(files[0]),
     };
-    setVideo(newVideo);
+    setData('video', newVideo);
     event.target.value = '';
   };
 
+  const submitPost = async () => {
+    if (data.content) {
+      post(route('posts.store'), data, {
+        forceFormData: true,
+      });
+    }
+  };
+
   return (
-    <Layout {...props}>
+    <Layout>
       <Head title="글 작성하기" />
       <div ref={pageArea}>
         <div className="px-6 pt-6">
           <div className="space-y-4">
             <div className="flex space-x-3">
               {/* 게시위치 선택 */}
-              <Listbox value={board} onChange={setBoard}>
-                {({ open }) => (
-                  <>
-                    <div className="relative w-64 mt-1">
-                      <Listbox.Button className="w-full py-2 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-md relativew-full dark:border-neutral-700 dark:bg-neutral-800 focus:outline-none focus:text-gray-900 dark:focus:text-white focus:placeholder-gray-400 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
-                        <div className="flex items-center dark:text-gray-300">
-                          <FontAwesomeIcon
-                            icon={board.icon}
-                            className="w-4 h-4"
-                          />
-                          <span className="ml-3 truncate">{board.title}</span>
-                        </div>
-                        <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                          <SelectorIcon
-                            className="w-5 h-5 text-gray-400"
-                            aria-hidden="true"
-                          />
-                        </span>
-                      </Listbox.Button>
-
-                      <Transition
-                        show={open}
-                        as={Fragment}
-                        leave="transition ease-in duration-100"
-                        leaveFrom="opacity-100"
-                        leaveTo="opacity-0"
-                      >
-                        <Listbox.Options className="absolute z-20 w-full py-1 mt-1 overflow-auto text-base text-gray-700 bg-white rounded-md shadow-lg dark:bg-neutral-800 dark:text-white dark:border dark:border-neutral-700 max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                          {boards.map((board) => (
-                            <Listbox.Option
-                              key={board.id}
-                              className={({ selected }) =>
-                                classNames(
-                                  'relative py-2 pl-3 text-gray-700 cursor-default select-none pr-9 dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-neutral-700',
-                                  selected
-                                    ? 'bg-gray-100 dark:bg-neutral-700'
-                                    : '',
-                                )
-                              }
-                              value={board}
-                            >
-                              {({ selected }) => (
-                                <>
-                                  <div className="flex items-center">
-                                    <FontAwesomeIcon
-                                      icon={board.icon}
-                                      className="w-4 h-4"
-                                    />
-                                    <span
-                                      className={classNames(
-                                        'ml-3 truncate',
-                                        selected && 'font-semibold',
-                                      )}
-                                    >
-                                      {board.title}
-                                    </span>
-                                  </div>
-
-                                  {selected && (
-                                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-neutral-700">
-                                      <CheckIcon
-                                        className="w-5 h-5"
-                                        aria-hidden="true"
-                                      />
-                                    </span>
-                                  )}
-                                </>
-                              )}
-                            </Listbox.Option>
-                          ))}
-                        </Listbox.Options>
-                      </Transition>
-                    </div>
-                  </>
-                )}
-              </Listbox>
+              {errors.board && <ValidationError error={errors.board} />}
+              <SelectBoard
+                boards={boards}
+                board={data.board}
+                setData={setData}
+              />
             </div>
             {/* 게시글 */}
+            {errors.content && <ValidationError error={errors.content} />}
             <div className="relative block w-full group">
               <div
                 ref={contentAreaCover}
-                className="absolute top-0 left-0 z-0 w-full h-full p-3 text-gray-900 bg-white border border-transparent group:focus:text-gray-900 dark:group:focus:text-white dark:text-white sm:text-sm dark:bg-neutral-800"
-              />
+                className="absolute top-0 left-0 z-0 w-full h-full p-3 text-gray-900 whitespace-pre bg-white border border-transparent group:focus:text-gray-900 dark:group:focus:text-white dark:text-white dark:bg-neutral-800"
+              >
+                {data.content.split(' ').map((word, index) => {
+                  if (word.startsWith('#') && word.length > 1) {
+                    return (
+                      <span key={index} className="text-blue-500">
+                        {word}{' '}
+                      </span>
+                    );
+                  }
+                  return word + ' ';
+                })}
+              </div>
               <TextareaAutosize
                 className={classNames(
-                  'relative z-10 block w-full p-3 text-transparent placeholder-gray-500 bg-transparent border border-gray-300 rounded-md resize-none dark:border-neutral-700 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 sm:text-sm',
+                  'relative z-10 block w-full p-3 text-transparent placeholder-gray-500 bg-transparent border border-gray-300 rounded-md resize-none dark:border-neutral-700 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-gray-500 focus:border-gray-500',
                   selection.primary,
                 )}
                 placeholder={'내용을 입력하세요.'}
                 minRows={5}
-                onChange={(event) => setContent(event.target.value)}
+                onChange={(event) => setData('content', event.target.value)}
               />
             </div>
             {/* 이미지 프리뷰 */}
-            {images.length > 0 && (
+            {errors['images.0.file'] && (
+              <ValidationError error={errors['images.0.file']} />
+            )}
+            {data.images.length > 0 && (
               <div className="flex w-full space-x-2 overflow-x-auto bg-transparent flex-nowrap">
-                {images.map((image, index) => (
-                  <div
-                    key={index}
-                    className="relative inline-block w-32 h-32 overflow-hidden rounded-md shrink-0"
-                  >
-                    <button
-                      onClick={() => deleteImage(image.id)}
-                      type="button"
-                      className="absolute inline-flex items-center p-1 text-white bg-gray-600 border border-transparent rounded-full shadow-sm top-1 left-1 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                    >
-                      <FontAwesomeIcon icon={faXmark} className="w-5 h-5" />
-                    </button>
-                    <img
-                      src={image.preview}
-                      alt={image.file.name}
-                      className="object-cover w-full h-full"
+                {existGif ? (
+                  <GifPreview
+                    image={data.images[0]}
+                    deleteImage={deleteImage}
+                  />
+                ) : (
+                  data.images.map((image, index) => (
+                    <ImagePreview
+                      image={image}
+                      key={index}
+                      deleteImage={deleteImage}
                     />
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             )}
 
             {/* 비디오 프리뷰 */}
-            {video && (
-              <div className="flex w-full space-x-2 overflow-x-auto bg-transparent flex-nowrap">
-                <div className="relative inline-block w-full overflow-hidden border border-gray-300 rounded-md dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800 max-h-80 shrink-0">
-                  <button
-                    onClick={() => setVideo(null)}
-                    type="button"
-                    className="absolute z-10 inline-flex items-center p-1 text-white bg-gray-600 border border-transparent rounded-full shadow-sm top-1 left-1 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                  >
-                    <FontAwesomeIcon icon={faXmark} className="w-5 h-5" />
-                  </button>
-                  <video
-                    src={video.preview}
-                    alt={video.file.name}
-                    className="w-full h-full max-w-full"
-                    onLoadedData={() => shouldSticky()}
-                  />
-                </div>
-              </div>
+            {errors['video.file'] && (
+              <ValidationError error={errors['video.file']} />
+            )}
+            {data.video && (
+              <VideoThumbnail
+                video={data.video}
+                shouldSticky={shouldSticky}
+                setData={setData}
+              />
             )}
           </div>
         </div>
         <div
           className={classNames(
-            'sticky bottom-0 flex flex-wrap justify-between px-6 pb-4',
+            'sticky bottom-0 flex flex-wrap justify-between px-6 pb-4 z-20',
             isSticky &&
               'shadow border-t border-gray-200 dark:border-neutral-700 mt-6 bg-white dark:bg-neutral-900',
           )}
@@ -268,7 +245,7 @@ export default function Home(props) {
               className={classNames(
                 'inline-flex items-center p-2 space-x-2 rounded-md whitespace-nowrap cursor-pointer',
                 buttonColor.outline,
-                video && 'pointer-events-none opacity-30',
+                data.video && 'pointer-events-none opacity-30',
               )}
             >
               <FontAwesomeIcon
@@ -289,7 +266,7 @@ export default function Home(props) {
               className={classNames(
                 'inline-flex items-center p-2 space-x-2 rounded-md whitespace-nowrap cursor-pointer',
                 buttonColor.outline,
-                images.length > 0 && 'pointer-events-none opacity-30',
+                data.images.length > 0 && 'pointer-events-none opacity-30',
               )}
             >
               <FontAwesomeIcon
@@ -298,12 +275,12 @@ export default function Home(props) {
                 aria-hidden="true"
               />
               <span className="text-sm font-medium">
-                비디오 {video ? '변경' : '추가'}
+                비디오 {data.video ? '변경' : '추가'}
               </span>
               <input
                 type="file"
                 className="hidden"
-                accept="video/mp4,video/mkv, video/x-m4v,video/*"
+                accept="video/*"
                 onChange={videoChange}
               />
             </label>
@@ -314,7 +291,10 @@ export default function Home(props) {
               className={classNames(
                 'inline-flex items-center px-3 py-2 rounded-md whitespace-nowrap',
                 buttonColor.solid,
+                !data.content && 'opacity-30 pointer-events-none',
               )}
+              onClick={submitPost}
+              disabled={!data.content}
             >
               <span className="text-sm font-medium">등록하기</span>
             </button>

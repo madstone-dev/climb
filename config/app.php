@@ -167,6 +167,7 @@ return [
         /*
          * Package Service Providers...
          */
+        ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -191,7 +192,14 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // ...
+        'Image' => Intervention\Image\Facades\Image::class,
+        'File' => Illuminate\Http\File::class,
+        'Storage' => Illuminate\Support\Facades\Storage::class,
+        'Validator' => Illuminate\Support\Facades\Validator::class,
+        'Auth' => Illuminate\Support\Facades\Auth::class,
+        'Redirect' => Illuminate\Support\Facades\Redirect::class,
+        'Str'      => Illuminate\Support\Str::class,
+        'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class
     ])->toArray(),
 
 ];

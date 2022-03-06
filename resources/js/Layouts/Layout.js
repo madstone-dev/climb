@@ -10,6 +10,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { classNames } from '@/Utils/commons';
 import { layoutBg } from '@/styles';
+import { usePage } from '@inertiajs/inertia-react';
 
 export const navigation = [
   { name: '피드 홈', href: route(routes.HOME), icon: faHome },
@@ -30,7 +31,10 @@ export const navigation = [
   },
 ];
 
-export default function Layout({ auth, ziggy: router, children }) {
+export default function Layout({ children }) {
+  const {
+    props: { auth, ziggy: router },
+  } = usePage();
   return (
     <div className={classNames('flex flex-col w-full min-h-screen', layoutBg)}>
       <Header auth={auth} router={router} />
