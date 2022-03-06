@@ -8,6 +8,8 @@ import Guest from '@/Layouts/Guest';
 import Logo from '@/Components/Logo';
 import Label from '@/Components/Label';
 import { routes } from '@/constances';
+import { classNames } from '@/Utils/commons';
+import { textColor } from '@/styles';
 
 export default function Login(props) {
   const { status, canResetPassword } = props;
@@ -49,7 +51,12 @@ export default function Login(props) {
             <Logo className="w-12 h-12" />
             <span className="text-4xl font-extrabold">MadStone</span>
           </Link>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h2
+            className={classNames(
+              'mt-6 text-3xl font-extrabold',
+              textColor.secondary,
+            )}
+          >
             로그인 하세요
           </h2>
         </div>
@@ -64,7 +71,11 @@ export default function Login(props) {
             <ValidationErrors errors={errors} />
             <form onSubmit={submit} className="space-y-6">
               <div>
-                <Label htmlFor="email" value="이메일">
+                <Label
+                  htmlFor="email"
+                  value="이메일"
+                  className={textColor.secondary}
+                >
                   이메일
                 </Label>
                 <div className="mt-1">
@@ -81,7 +92,11 @@ export default function Login(props) {
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="password" value="비밀번호">
+                <Label
+                  htmlFor="password"
+                  value="비밀번호"
+                  className={textColor.secondary}
+                >
                   비밀번호
                 </Label>
                 <div className="mt-1">
@@ -105,7 +120,12 @@ export default function Login(props) {
                       handleChange={onHandleChange}
                     />
 
-                    <span className="ml-2 text-sm text-gray-600">
+                    <span
+                      className={classNames(
+                        'ml-2 text-sm',
+                        textColor.secondary,
+                      )}
+                    >
                       로그인 유지
                     </span>
                   </label>
@@ -115,7 +135,10 @@ export default function Login(props) {
                   {canResetPassword && (
                     <Link
                       href={route(routes.PASSWORD_REQUEST)}
-                      className="text-sm text-gray-600 underline hover:text-gray-900"
+                      className={classNames(
+                        'text-sm underline',
+                        textColor.secondary,
+                      )}
                     >
                       비밀번호를 잊으셨나요?
                     </Link>
@@ -135,7 +158,12 @@ export default function Login(props) {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 text-gray-500 bg-white">
+                <span
+                  className={classNames(
+                    'px-2 bg-white dark:bg-neutral-900',
+                    textColor.secondary,
+                  )}
+                >
                   아직 계정이 없으신가요?
                 </span>
               </div>
@@ -143,7 +171,7 @@ export default function Login(props) {
             <div className="flex justify-center my-6">
               <Link
                 href={route(routes.REGISTER)}
-                className="text-sm text-gray-600 underline hover:text-gray-900"
+                className={classNames('text-sm underline', textColor.secondary)}
               >
                 회원가입
               </Link>

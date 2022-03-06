@@ -7,6 +7,8 @@ import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import Guest from '@/Layouts/Guest';
 import Logo from '@/Components/Logo';
 import { routes } from '@/constances';
+import { classNames } from '@/Utils/commons';
+import { textColor } from '@/styles';
 
 export default function ConfirmPassword(props) {
   const { data, setData, post, processing, errors, reset } = useForm({
@@ -41,12 +43,17 @@ export default function ConfirmPassword(props) {
             <Logo className="w-12 h-12" />
             <span className="text-4xl font-extrabold">MadStone</span>
           </Link>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            비밀번호 재설정
+          <h2
+            className={classNames(
+              'mt-6 text-3xl font-extrabold',
+              textColor.secondary,
+            )}
+          >
+            비밀번호 확인
           </h2>
         </div>
         <div className="mt-8">
-          <div className="mb-4 text-sm text-gray-600">
+          <div className={classNames('mb-4 text-sm', textColor.secondary)}>
             보안을 위해 비밀번호를 입력해주세요.
           </div>
 

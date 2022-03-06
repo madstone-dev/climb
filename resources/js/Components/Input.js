@@ -1,3 +1,5 @@
+import { inputColor, selection } from '@/styles';
+import { classNames } from '@/Utils/commons';
 import React, { useEffect, useRef } from 'react';
 
 export default function Input({
@@ -24,10 +26,12 @@ export default function Input({
         type={type}
         name={name}
         value={value}
-        className={
-          `border-gray-300 focus:border-neutral-300 focus:ring focus:ring-neutral-200 focus:ring-opacity-50 rounded-md shadow-sm ` +
-          className
-        }
+        className={classNames(
+          'rounded-md',
+          className,
+          selection.primary,
+          inputColor.outline,
+        )}
         ref={input}
         autoComplete={autoComplete}
         required={required}

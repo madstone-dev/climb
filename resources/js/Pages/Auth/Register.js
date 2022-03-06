@@ -7,6 +7,8 @@ import Guest from '@/Layouts/Guest';
 import Logo from '@/Components/Logo';
 import Label from '@/Components/Label';
 import { routes } from '@/constances';
+import { classNames } from '@/Utils/commons';
+import { textColor } from '@/styles';
 
 export default function Register(props) {
   const { data, setData, post, processing, errors, reset } = useForm({
@@ -48,7 +50,12 @@ export default function Register(props) {
             <Logo className="w-12 h-12" />
             <span className="text-4xl font-extrabold">MadStone</span>
           </Link>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h2
+            className={classNames(
+              'mt-6 text-3xl font-extrabold',
+              textColor.secondary,
+            )}
+          >
             회원가입
           </h2>
         </div>
@@ -58,7 +65,11 @@ export default function Register(props) {
             <ValidationErrors errors={errors} />
             <form onSubmit={submit} className="space-y-6">
               <div>
-                <Label htmlFor="name" value="이름">
+                <Label
+                  htmlFor="name"
+                  value="이름"
+                  className={textColor.secondary}
+                >
                   이름
                 </Label>
                 <div className="mt-1">
@@ -76,7 +87,11 @@ export default function Register(props) {
               </div>
 
               <div>
-                <Label htmlFor="email" value="이메일">
+                <Label
+                  htmlFor="email"
+                  value="이메일"
+                  className={textColor.secondary}
+                >
                   이메일
                 </Label>
                 <div className="mt-1">
@@ -93,7 +108,11 @@ export default function Register(props) {
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="password" value="비밀번호">
+                <Label
+                  htmlFor="password"
+                  value="비밀번호"
+                  className={textColor.secondary}
+                >
                   비밀번호
                 </Label>
                 <div className="mt-1">
@@ -109,7 +128,11 @@ export default function Register(props) {
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="password_confirmation" value="비밀번호 확인">
+                <Label
+                  htmlFor="password_confirmation"
+                  value="비밀번호 확인"
+                  className={textColor.secondary}
+                >
                   비밀번호 확인
                 </Label>
                 <div className="mt-1">
@@ -136,7 +159,12 @@ export default function Register(props) {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 text-gray-500 bg-white">
+                <span
+                  className={classNames(
+                    'px-2 bg-white dark:bg-neutral-900',
+                    textColor.secondary,
+                  )}
+                >
                   이미 계정이 있으신가요?
                 </span>
               </div>
@@ -144,7 +172,7 @@ export default function Register(props) {
             <div className="flex justify-center my-6">
               <Link
                 href={route(routes.LOGIN)}
-                className="text-sm text-gray-600 underline hover:text-gray-900"
+                className={classNames('text-sm underline', textColor.secondary)}
               >
                 로그인
               </Link>

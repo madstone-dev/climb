@@ -11,3 +11,7 @@
   height: auto !important;
   right: 0 !important;
 }
+
+#nprogress .bar {
+  background: #29d !important;
+}

@@ -6,6 +6,8 @@ import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import Guest from '@/Layouts/Guest';
 import Logo from '@/Components/Logo';
 import { routes } from '@/constances';
+import { classNames } from '@/Utils/commons';
+import { textColor } from '@/styles';
 
 export default function ForgotPassword(props) {
   const { status } = props;
@@ -35,12 +37,22 @@ export default function ForgotPassword(props) {
             <Logo className="w-12 h-12" />
             <span className="text-4xl font-extrabold">MadStone</span>
           </Link>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h2
+            className={classNames(
+              'mt-6 text-3xl font-extrabold',
+              textColor.secondary,
+            )}
+          >
             비밀번호 재설정
           </h2>
         </div>
         <div className="mt-8">
-          <div className="mb-4 text-sm leading-normal text-gray-500">
+          <div
+            className={classNames(
+              'mb-4 text-sm leading-normal',
+              textColor.secondary,
+            )}
+          >
             비밀번호를 잊어 버리셨나요?
             <br />
             이메일 주소를 알려주시면 비밀번호 재설정 링크를 이메일로

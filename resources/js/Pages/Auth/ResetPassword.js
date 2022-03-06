@@ -3,10 +3,12 @@ import Button from '@/Components/Button';
 import Input from '@/Components/Input';
 import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
-import { Head, useForm } from '@inertiajs/inertia-react';
+import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import Guest from '@/Layouts/Guest';
 import Logo from '@/Components/Logo';
 import { routes } from '@/constances';
+import { classNames } from '@/Utils/commons';
+import { textColor } from '@/styles';
 
 export default function ResetPassword(props) {
   const { token, email } = props;
@@ -35,7 +37,7 @@ export default function ResetPassword(props) {
 
   return (
     <Guest>
-      <Head title="Reset Password" />
+      <Head title="비밀번호 재설정" />
       <div className="w-full max-w-sm mx-auto lg:w-96">
         <div>
           <Link
@@ -45,7 +47,12 @@ export default function ResetPassword(props) {
             <Logo className="w-12 h-12" />
             <span className="text-4xl font-extrabold">MadStone</span>
           </Link>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h2
+            className={classNames(
+              'mt-6 text-3xl font-extrabold',
+              textColor.secondary,
+            )}
+          >
             비밀번호 재설정
           </h2>
         </div>
@@ -54,7 +61,11 @@ export default function ResetPassword(props) {
 
           <form onSubmit={submit}>
             <div>
-              <Label forInput="email" value="이메일" />
+              <Label
+                forInput="email"
+                value="이메일"
+                className={textColor.secondary}
+              />
 
               <Input
                 type="email"
@@ -67,7 +78,11 @@ export default function ResetPassword(props) {
             </div>
 
             <div className="mt-4">
-              <Label forInput="password" value="비밀번호" />
+              <Label
+                forInput="password"
+                value="비밀번호"
+                className={textColor.secondary}
+              />
 
               <Input
                 type="password"
@@ -81,7 +96,11 @@ export default function ResetPassword(props) {
             </div>
 
             <div className="mt-4">
-              <Label forInput="password_confirmation" value="비밀번호 확인" />
+              <Label
+                forInput="password_confirmation"
+                value="비밀번호 확인"
+                className={textColor.secondary}
+              />
 
               <Input
                 type="password"

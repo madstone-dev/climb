@@ -4,6 +4,8 @@ import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import Guest from '@/Layouts/Guest';
 import Logo from '@/Components/Logo';
 import { routes } from '@/constances';
+import { classNames } from '@/Utils/commons';
+import { textColor } from '@/styles';
 
 export default function VerifyEmail(props) {
   const { status } = props;
@@ -26,12 +28,17 @@ export default function VerifyEmail(props) {
             <Logo className="w-12 h-12" />
             <span className="text-4xl font-extrabold">MadStone</span>
           </Link>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h2
+            className={classNames(
+              'mt-6 text-3xl font-extrabold',
+              textColor.secondary,
+            )}
+          >
             이메일 확인
           </h2>
         </div>
         <div className="mt-8">
-          <div className="mb-4 text-sm text-gray-600">
+          <div className={classNames('mb-4 text-sm', textColor.secondary)}>
             가입해주셔서 감사합니다! 시작하기 전에 이메일로 전달된 링크를
             클릭하여 인증을 완료해주세요. 혹시 이메일을 받지 못했다면 재전송
             버튼을 눌러주세요.
@@ -49,7 +56,7 @@ export default function VerifyEmail(props) {
                 href={route(routes.LOGOUT)}
                 method="post"
                 as="button"
-                className="text-sm text-gray-600 underline hover:text-gray-900"
+                className={classNames('text-sm underline', textColor.secondary)}
               >
                 로그아웃
               </Link>

@@ -7,7 +7,7 @@ import { routes } from '@/constances';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/pro-regular-svg-icons';
 import { classNames } from '@/Utils/commons';
-import { inputColor } from '@/styles';
+import { inputColor, selection } from '@/styles';
 
 export default function Header({ auth }) {
   const headerRef = useRef();
@@ -62,6 +62,7 @@ export default function Header({ auth }) {
                     className={classNames(
                       'block w-full py-2 pl-10 pr-3 text-sm sm:text-sm',
                       inputColor.outline,
+                      selection.primary,
                     )}
                     placeholder="피드 검색"
                     type="search"

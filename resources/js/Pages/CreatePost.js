@@ -14,7 +14,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextareaAutosize from 'react-textarea-autosize';
-import { buttonColor } from '@/styles';
+import { buttonColor, selection } from '@/styles';
 import { HeaderStyleContext } from '@/Providers/HeaderStyleProvider';
 
 const boards = [
@@ -39,7 +39,8 @@ export default function Home(props) {
   const [board, setBoard] = useState(boards[0]);
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState(null);
-  const contentArea = useRef();
+  const contentAreaCover = useRef();
+  const [content, setContent] = useState('');
   const pageArea = useRef();
   const { height: headerHeight } = useContext(HeaderStyleContext);
   const [isSticky, setIsSticky] = useState(false);
@@ -63,6 +64,12 @@ export default function Home(props) {
       }
     };
   }, [pageArea.current, images, video]);
+
+  useEffect(() => {
+    if (contentAreaCover.current) {
+      contentAreaCover.current.innerText = content;
+    }
+  }, [content, contentAreaCover.current]);
 
   const imageChange = (event) => {
     const { files } = event.target;
@@ -136,7 +143,7 @@ export default function Home(props) {
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                       >
-                        <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base text-gray-700 bg-white shadow-lg dark:bg-neutral-800 dark:text-white dark:border dark:border-neutral-700 max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        <Listbox.Options className="absolute z-20 w-full py-1 mt-1 overflow-auto text-base text-gray-700 bg-white rounded-md shadow-lg dark:bg-neutral-800 dark:text-white dark:border dark:border-neutral-700 max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                           {boards.map((board) => (
                             <Listbox.Option
                               key={board.id}
@@ -187,12 +194,21 @@ export default function Home(props) {
               </Listbox>
             </div>
             {/* 게시글 */}
-            <TextareaAutosize
-              ref={contentArea}
-              className="block w-full placeholder-gray-500 bg-white border border-gray-300 rounded-md resize-none dark:border-neutral-700 dark:bg-neutral-800 focus:outline-none focus:text-gray-900 dark:focus:text-gray-300 focus:placeholder-gray-400 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
-              placeholder={'내용을 입력하세요.'}
-              minRows={5}
-            />
+            <div className="relative block w-full group">
+              <div
+                ref={contentAreaCover}
+                className="absolute top-0 left-0 z-0 w-full h-full p-3 text-gray-900 bg-white border border-transparent group:focus:text-gray-900 dark:group:focus:text-white dark:text-white sm:text-sm dark:bg-neutral-800"
+              />
+              <TextareaAutosize
+                className={classNames(
+                  'relative z-10 block w-full p-3 text-transparent placeholder-gray-500 bg-transparent border border-gray-300 rounded-md resize-none dark:border-neutral-700 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 sm:text-sm',
+                  selection.primary,
+                )}
+                placeholder={'내용을 입력하세요.'}
+                minRows={5}
+                onChange={(event) => setContent(event.target.value)}
+              />
+            </div>
             {/* 이미지 프리뷰 */}
             {images.length > 0 && (
               <div className="flex w-full space-x-2 overflow-x-auto bg-transparent flex-nowrap">
