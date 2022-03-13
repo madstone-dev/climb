@@ -26,3 +26,7 @@ export const selection = {
   primary:
     'focus:selection:bg-sky-200 selection:bg-gray-300 caret-gray-900 selection:text-gray-900 dark:selection:text-gray-700',
 };
+
+export const borderColor = {
+  innerContent: '1px solid rgba(255,255,255,0.2)',
+};

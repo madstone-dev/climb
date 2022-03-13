@@ -18,6 +18,7 @@ import VideoThumbnail from '@/Components/CreatePost/VideoThumbnail';
 import ImagePreview from '@/Components/CreatePost/ImagePreview';
 import GifPreview from '@/Components/CreatePost/GifPreview';
 import SelectBoard from '@/Components/CreatePost/SelectBoard';
+import { replaceHashtag } from '@/Utils/post.utils';
 
 const boards = [
   {
@@ -175,18 +176,10 @@ export default function Home() {
               <div
                 ref={contentAreaCover}
                 className="absolute top-0 left-0 z-0 w-full h-full p-3 text-gray-900 whitespace-pre bg-white border border-transparent group:focus:text-gray-900 dark:group:focus:text-white dark:text-white dark:bg-neutral-800"
-              >
-                {data.content.split(' ').map((word, index) => {
-                  if (word.startsWith('#') && word.length > 1) {
-                    return (
-                      <span key={index} className="text-blue-500">
-                        {word}{' '}
-                      </span>
-                    );
-                  }
-                  return word + ' ';
-                })}
-              </div>
+                dangerouslySetInnerHTML={{
+                  __html: replaceHashtag(data.content),
+                }}
+              />
               <TextareaAutosize
                 className={classNames(
                   'relative z-10 block w-full p-3 text-transparent placeholder-gray-500 bg-transparent border border-gray-300 rounded-md resize-none dark:border-neutral-700 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-gray-500 focus:border-gray-500',

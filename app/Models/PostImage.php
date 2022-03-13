@@ -14,4 +14,9 @@ class PostImage extends Model
         'path',
         'converted',
     ];
+
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
 }

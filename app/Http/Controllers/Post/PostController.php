@@ -16,6 +16,7 @@ use FFMpeg;
 use App\Models\Post;
 use App\Models\PostImage;
 use App\Models\PostVideo;
+use App\Models\Hashtag;
 
 class PostController extends Controller
 {
@@ -65,10 +66,24 @@ class PostController extends Controller
             'content' => $request->content
         ]);
 
+        preg_match_all("/#([0-9a-zA-Z가-힣]*)/",$request->content,$words);
+        foreach($words[0] as $word)
+        {
+            $existsTag = Hashtag::where('content',$word)->first();
+            if($existsTag){
+                $existsTag->posts()->attach($post->id);
+            }else{
+                $hashtag = Hashtag::create([
+                    'content' => $word
+                ]);
+                $hashtag->posts()->attach($post->id);
+            }
+        }
+
         $images = $request->images;
         $video = $request->video;
 
-        $maxSize = 540;
+        $maxSize = 600;
 
         // 파일 저장
         if($images && count($images) > 0){
@@ -76,21 +91,22 @@ class PostController extends Controller
                 $imageFile = new File($image['file']);
                 $hashname = $imageFile->hashName();
                 $extention = $imageFile->extension();
+                $imagePath = 'images/'.$hashname;
                 $size = getimagesize($imageFile);
                 $width = $size[0];
                 $height = $size[1];
+                $orientate = Image::make($imageFile)->orientate();
                 if(($width > $maxSize || $height > $maxSize) && strtolower($extention) !== "gif"){
-                    $resize = Image::make($imageFile)->resize($maxSize,$maxSize,function ($constraint) {
+                    $resize = $orientate->resize($maxSize,$maxSize,function ($constraint) {
                         $constraint->aspectRatio();
                     })->encode($extention,80);
-                    $imagePath = Storage::disk('public')->put('images/'.$hashname,$resize);
+                    Storage::disk('public')->put($imagePath,$resize);
                 }else{
-                    $imagePath = Storage::disk('public')->putFile('images',$imageFile);
+                    Storage::disk('public')->put($imagePath,$orientate);
                 }
                 PostImage::create([
                     'post_id' => $post->id,
-                    'path' => $imagePath,
-                    'converted' => 1
+                    'path' => $imagePath
                 ]);
             }
         }else if($video){
@@ -99,50 +115,82 @@ class PostController extends Controller
 
             $mainFileName = Str::random(6).now()->timestamp.".".$extention;
             $previewFileName = Str::random(6).now()->timestamp.".mp4";
-            $picName = Str::random(6).now()->timestamp.'.jpg';
+            $thumbnailName = Str::random(6).now()->timestamp.'.jpg';
 
             $localVideoPath = 'videos/'.$mainFileName;
+            $previewFilePath = 'videos/'.$previewFileName;
+            $thumbnailPath = 'video_thumbnails/'.$thumbnailName;
 
             //save locally
-            Storage::disk('public')->put('videos/'.$mainFileName, file_get_contents($videoFile));
+            Storage::disk('public')->put($localVideoPath, file_get_contents($videoFile));
+
+            $savedVideo = PostVideo::create([
+                'post_id' => $post->id,
+                'path' => $localVideoPath,
+                'converted' => 0
+            ]);
 
             try{
+                $media = FFMpeg::fromDisk('public')
+                ->open($localVideoPath);
+
+                $dimensions = $media
+                ->getVideoStream()
+                ->getDimensions();
+
+                dd($dimensions);
+
+                $maxSize = 600;
                 $format = new FFMpeg\Format\Video\X264();
                 $format->setAudioCodec("libmp3lame");
 
-                FFMpeg::fromDisk('public')
-                ->open($localVideoPath)
+                $videoWidth = $dimensions->getWidth();
+                $videoHeight = $dimensions->getHeight();
+                
+                $ratio = min($maxSize/$videoWidth,$maxSize/$videoHeight);
+                $ratioWidth = $videoWidth*$ratio;
+                $ratioHeight = $videoHeight*$ratio;
+
+                // if($videoWidth > $maxSize || $videoHeight > $maxSize){
+                //     $media
+                //     ->export()
+                //     ->toDisk('public')
+                //     ->inFormat($format)
+                //     ->resize(ceil($ratioWidth),ceil($ratioHeight),'fit')
+                //     ->save($previewFilePath);
+                // }else{
+                //     $media
+                //     ->export()
+                //     ->toDisk('public')
+                //     ->inFormat($format)
+                //     ->resize(ceil($videoWidth),ceil($videoHeight),'fit')
+                //     ->save($previewFilePath);
+                // }
+
+                $media
                 ->export()
                 ->toDisk('public')
                 ->inFormat($format)
-                ->resize($maxSize,$maxSize,'width')
-                ->save('videos/'.$previewFileName);
+                ->resize(ceil($videoWidth),ceil($videoHeight),'fit')
+                ->save($previewFilePath);
 
                 FFMpeg::fromDisk('public')
-                ->open($localVideoPath)
+                ->open($previewFilePath)
                 ->getFrameFromSeconds(1)
                 ->export()
                 ->toDisk('public')
-                ->save('video_thumbnails/'.$picName);
+                ->save($thumbnailPath);
+
+                Storage::disk('public')->delete($localVideoPath);
+
+                $savedVideo->path = $previewFilePath;
+                $savedVideo->thumbnail_path = $thumbnailPath;
+                $savedVideo->converted = 1;
+                $savedVideo->save();
             }catch (EncodingException $exception) {
                 $command = $exception->getCommand();
                 $errorLog = $exception->getErrorOutput();
             }
-            
-            // do any further processing
-            // return response( array( "message" => "Video Uploaded.", "data" => [
-            //     "video_file" => $mainFilePath,
-            //     "video_preview_file" = $previewFilePath,
-            //     "video_pic_file" => $picName
-            // ]  ), 200 );
-
-
-            // $videoPath = Storage::disk('public')->putFile('videos', new File($video['file']));
-            // PostVideo::create([
-            //     'post_id' => $post->id,
-            //     'path' => $videoPath,
-            //     'converted' => 0
-            // ]);
         }
 
         return Redirect::route('home');

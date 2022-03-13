@@ -1,3 +1,4 @@
+import React from 'react';
 import Header from '@/Components/header/Header';
 import LeftAside from '@/Components/aside/LeftAside';
 import RightAside from '@/Components/aside/RightAside';
@@ -31,24 +32,36 @@ export const navigation = [
   },
 ];
 
+const MemoHeader = React.memo(({ auth, router }) => (
+  <Header auth={auth} router={router} />
+));
+
+const MemoLeft = React.memo(({ router }) => (
+  <aside className="hidden w-64 py-6 pr-6 lg:block shrink-0 sm:pl-4">
+    <LeftAside router={router} />
+  </aside>
+));
+
+const MemoRight = React.memo(() => (
+  <aside className="hidden py-6 pl-6 xl:block xl:col-span-4 sm:pr-4">
+    <RightAside />
+  </aside>
+));
+
 export default function Layout({ children }) {
   const {
     props: { auth, ziggy: router },
   } = usePage();
   return (
     <div className={classNames('flex flex-col w-full min-h-screen', layoutBg)}>
-      <Header auth={auth} router={router} />
+      <MemoHeader auth={auth} router={router} />
       <div className="flex-1 w-full mx-auto lg:divide-x dark:divide-neutral-700 max-w-7xl sm:flex">
-        <aside className="hidden w-64 py-6 pr-6 lg:block shrink-0 sm:pl-4">
-          <LeftAside router={router} />
-        </aside>
-        <div className="flex-1 w-full divide-x dark:divide-neutral-700 xl:grid xl:grid-cols-11">
-          <main className="bg-opacity-75 xl:col-span-7 dark:bg-neutral-900">
+        <MemoLeft router={router} />
+        <div className="w-full divide-x dark:divide-neutral-700 xl:grid xl:grid-cols-11">
+          <main className="h-full bg-opacity-75 xl:col-span-7 dark:bg-neutral-900">
             {children}
           </main>
-          <aside className="hidden py-6 pl-6 xl:block xl:col-span-4 sm:pr-4">
-            <RightAside />
-          </aside>
+          <MemoRight />
         </div>
       </div>
     </div>

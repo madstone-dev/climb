@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('post_id');
             $table->text('path');
+            $table->text('thumbnail_path')->nullable();
             $table->binary('converted');
             $table->timestamps();
         });

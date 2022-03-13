@@ -12,6 +12,12 @@ class PostVideo extends Model
     protected $fillable = [
         'post_id',
         'path',
+        'thumbnail_path',
         'converted',
     ];
+
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
 }

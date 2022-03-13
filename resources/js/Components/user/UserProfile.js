@@ -8,7 +8,7 @@ export default function UserProfile({
     <img
       className={className}
       src={getAvatar(auth.user.name)}
-      alt={`${auth.user.name}'s profile`}
+      alt={`${auth.user.name}'의 프로필`}
     />
   );
 }
